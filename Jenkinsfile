@@ -28,7 +28,7 @@ pipeline {
         {
             steps {
                 sh "pip install --upgrade requests==2.20.1"
-                ansiblePlaybook playbook: 'ec2.yaml'
+                ansiblePlaybook playbook: './ec2.yaml'
             }
 
         }
