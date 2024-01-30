@@ -3,24 +3,30 @@
   connection: local
   tags: provisioning
 
-  vars:  
+  vars:
     keypair: hyderabad
     instance_type: t2.micro
     ami_id: ami-06aa3f7caf3a30282
     wait: yes
-    group: webserver  
+    group: webserver
     count: 1
     region: us-east-1
-    aws_access_key: AKIAXPL7YFM26P3EQLMC  
-    aws_secret_key: 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  
-    security_group_name: hyd-security-grp  
+    aws_access_key: AKIAXPL7YFM26P3EQLMC
+    aws_secret_key: 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
+    security_group_name: hyd-security-grp
     tag_name:
       Name: demo-ec2
 
   tasks:
+    - name: Install required libraries
+      pip:
+        name:
+          - botocore
+          - boto3
+
     - name: Create a security group
-      ec2_group: 
-        name: "{{ security_group_name }}"  
+      ec2_group:  # Using the recommended module
+        name: "{{ security_group_name }}"
         description: Security group for webservers
         region: "{{ region }}"
         rules:
@@ -28,8 +34,8 @@
             from_port: 22
             to_port: 22
             cidr_ip: 0.0.0.0/0
-          - proto: tcp  
-            from_port: 8085  
+          - proto: tcp
+            from_port: 8085
             to_port: 8085
             cidr_ip: 0.0.0.0/0
         rules_egress:
@@ -37,7 +43,7 @@
             cidr_ip: 0.0.0.0/0
 
     - name: Launch the new EC2 instance
-      ec2:  
+      ec2_instance:  # Using the recommended module
         instance_type: "{{ instance_type }}"
         image_id: "{{ ami_id }}"
         wait: "{{ wait }}"
@@ -45,7 +51,7 @@
         key_name: "{{ keypair }}"
         count: "{{ count }}"
         tags: "{{ tag_name }}"
-        security_groups: "{{ security_group_name }}"  
+        security_groups: "{{ security_group_name }}"
         user_data: |
           #!/bin/bash
           sudo apt update -y
