@@ -1,0 +1,62 @@
+---
+- name: provisioning a new EC2 instance and security group
+  hosts:  localhost
+  connection: local
+  tags: provisioning
+
+  vars:
+    ansible_python_interpreter: /ur/bin/python3.10
+    keypair:  hyderabad
+    instance_type:  t2.micro
+    ami_id: ami-06aa3f7caf3a30282
+    wait: yes
+    group:  webserver
+    count:  1
+    region: us-east-1
+    security_group: hyd-security-grp
+    tag_name:
+      Name: demo-ec2
+
+  tasks:
+    - name: install dependencies
+      pip:
+        name:
+          - boto3
+          - botocore
+      when: ansible_python_version.startswith('3.10')
+
+    - name:  create a security group
+      amazon.aws.ec2_group:
+        region: "{{ security_group }}"
+        description:  security group for webservers
+        name: "{{ region }}"
+        rules:
+          - proto:  tcp
+            from_port:  22
+            to_port:  22
+            cidr_ip:  0.0.0.0/0
+          - proto:  all
+            cidr_ip:  0.0.0.0/0
+        rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+
+    - name: launch the new EC2 instance
+      amazon:
+        aws:
+          ec2_instance:
+            security_group: "{{ security_group }}"
+            instance_type:  "{{ instance_type }}"
+            image_id: "{{ image_id }}"
+            wait: "{{ wait }}"
+            region: "{{ region }}"
+            key_name: "{{ keypair }}"
+            count: "{{ count }}"
+            tags: "{{ tag_name }}"
+            user_data:
+              #!/bin/bash
+              sudo apt update -y
+              sudo apt install docker.io -y
+              sudo systemctl start docker
+              sudo systemctl enable docker
+              docker container run -d -p 8085:80 --name snake-game ash2code/snake-game
