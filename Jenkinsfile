@@ -21,7 +21,7 @@ pipeline {
         stage ('TRIVY FS SCAN') 
         {
             steps {
-                sh "trivyu fs . > trivyfs.txt"
+                sh "trivy fs . > trivyfs.txt"
             }
         }
         stage ("ansible provision")
