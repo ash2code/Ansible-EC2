@@ -4,7 +4,7 @@
   tags: provisioning
 
   vars:
-    keypair: hyderabad
+    keypair: Main-Key
     instance_type: t2.micro
     ami_id: ami-06aa3f7caf3a30282
     wait: yes
