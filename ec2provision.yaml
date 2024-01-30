@@ -13,6 +13,8 @@
     group:  webserver
     count:  1
     region: us-east-1
+    aws_access_key: AKIAXPL7YFM26P3EQLMC
+    aws_secret_key: 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
     security_group: hyd-security-grp
     tag_name:
       Name: demo-ec2
