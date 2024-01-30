@@ -3,8 +3,7 @@
   connection: local
   tags: provisioning
 
-  vars:
-    ansible_python_interpreter: /usr/bin/python3.10  
+  vars:  
     keypair: hyderabad
     instance_type: t2.micro
     ami_id: ami-06aa3f7caf3a30282
@@ -19,13 +18,6 @@
       Name: demo-ec2
 
   tasks:
-    - name: Install dependencies
-      pip:
-        name:
-          - boto3
-          - botocore
-      when: ansible_python_version.startswith('3.10')
-
     - name: Create a security group
       ec2_group: 
         name: "{{ security_group_name }}"  
