@@ -27,9 +27,7 @@ pipeline {
         stage ("ansible provision")
         {
             steps {
-                sh "pip install --upgrade requests==2.20.1"
-                ansiblePlaybook playbook: 'ec2provision.yaml',
-                extras: "-e 'ansible_python_interpreter=/usr/bin/python3'"
+                ansiblePlaybook playbook: 'ec2provision.yaml'
             }
 
         }
