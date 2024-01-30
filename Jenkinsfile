@@ -26,11 +26,13 @@ pipeline {
 
     stage('Ansible provision') {
       steps {
-        ansiblePlaybook(
+        script {
           sh "pip install botocore boto3"
-          playbook: 'ec2provision.yaml',
-          extras: '-e ansible_python_interpreter=/usr/bin/python3.8'
-        )
+          ansiblePlaybook(
+            playbook: 'ec2provision.yaml',
+            extras: '-e ansible_python_interpreter=/usr/bin/python3.8'
+          )
+        }
       }
     }
   }
