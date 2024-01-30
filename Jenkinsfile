@@ -28,7 +28,7 @@ pipeline {
       steps {
         ansiblePlaybook(
           playbook: 'ec2provision.yaml',
-          extras: '-e ansible_python_interpreter=/path/to/correct/python'  // Specify if needed
+          extras: '-e ansible_python_interpreter=/usr/bin/python3.8'
         )
       }
     }
